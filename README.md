@@ -9,7 +9,7 @@ This repository contains a reproducible analysis pipeline for characterizing Alz
 - **AnalysisReport**  
   Contains the main R Markdown analysis (`analysis_report.Rmd`) and rendered outputs (e.g., `html`), documenting the full pipeline from data preprocessing to VAE-based latent representation.
 
-- **Archive/**  
+- **Archive**  
   Legacy or intermediate scripts, figures, or objects not used in the main pipeline but retained for reference.
 
 - **Data**  
