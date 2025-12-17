@@ -1,0 +1,370 @@
+# ---- Libraries ----
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(haven)
+library(nnet)
+library(pROC)
+library(keras)
+library(tensorflow)
+library(DESeq2)
+library(corrplot)
+library(pheatmap)
+library(factoextra)
+library(cluster)
+library(GGally)
+library(readr)
+library(reshape2) 
+
+# Reproducibility
+set.seed(123)
+
+# ---- Load HRS Biomarker + Cognition Data ----
+trk2020 <- read_sas("trk2020tr_r.sas7bdat")
+neurobiomarker <- read_sas("neurobiomarker_sithara.sas7bdat")
+cogimp <- read_sas("cogimp9220a_r.sas7bdat")
+
+# ---- Preprocess ----
+trk2020_sub <- trk2020 %>%
+  select(HHID, PN, GENDER, HISPANIC, RACE, PAGE, PVBSWGTR, SECU, STRATUM, SCHLYRS) %>%
+  distinct() %>%
+  mutate(HHID_PN = paste0(HHID, "_", PN))
+
+neurobiomarker <- neurobiomarker %>%
+  mutate(HHID_PN = paste0(HHID, "_", PN))
+
+cogimp_sub <- cogimp %>%
+  mutate(HHID_PN = paste0(HHID, "_", PN)) %>%
+  select(HHID_PN, R13IMRC, R13DLRC, R13SER7, R13BWC20) %>%
+  na.omit() %>%
+  mutate(
+    Dementia_Score_Imputed_2016 = R13IMRC + R13DLRC + R13SER7 + R13BWC20,
+    Dementia_IMP_2016 = case_when(
+      Dementia_Score_Imputed_2016 <= 6 ~ "Dementia",
+      Dementia_Score_Imputed_2016 <= 11 ~ "CIND",
+      TRUE ~ "Normal"
+    )
+  )
+
+# ---- Merge All Data ----
+final <- neurobiomarker %>%
+  inner_join(trk2020_sub, by = "HHID_PN") %>%
+  inner_join(cogimp_sub, by = "HHID_PN")
+
+# ---- Log-transform Biomarkers ----
+final <- final %>%
+  mutate(
+    log_NfL = log(NfL),
+    log_GFAP = log(GFAP),
+    log_AB42_40_ratio = log(AB42_40_ratio),
+    log_pTau181_recode = log(pTau181_recode)
+  )
+
+# ---- A/T/N Endotypes ----
+A_cut <- median(final$log_AB42_40_ratio, na.rm = TRUE)
+T_cut <- median(final$log_pTau181_recode, na.rm = TRUE)
+N_cut <- median(final$log_NfL, na.rm = TRUE)
+
+final <- final %>%
+  mutate(
+    A = ifelse(log_AB42_40_ratio < A_cut, "A+", "A-"),
+    T = ifelse(log_pTau181_recode > T_cut, "T+", "T-"),
+    N = ifelse(log_NfL > N_cut, "N+", "N-"),
+    ATN = paste(A, T, N, sep = "/")
+  )
+
+print(table(final$ATN))
+
+# ---- ROC FUNCTION ----
+run_roc <- function(data, biomarker, outcome = "Dementia_IMP_2016", case = "Dementia", control = "Normal") {
+  
+  # Select needed variables
+  vars <- c(outcome, biomarker, "PAGE", "GENDER", "RACE", "SCHLYRS")
+  df <- data[, vars] %>% na.omit()
+  
+  # Filter to binary outcome only
+  df <- df[df[[outcome]] %in% c(case, control), ]
+  
+  # Relevel outcome: control = 0, case = 1
+  df[[outcome]] <- factor(df[[outcome]], levels = c(control, case))
+  
+  # Fit logistic regression
+  formula <- as.formula(paste(outcome, "~", biomarker, "+ PAGE + GENDER + RACE + SCHLYRS"))
+  fit <- glm(formula, data = df, family = "binomial")
+  
+  # Predict probabilities
+  pi_hat <- predict(fit, type = "response")
+  
+  # ROC object with explicit levels
+  roc_obj <- roc(response = df[[outcome]], predictor = pi_hat, levels = c(control, case), direction = "<")
+  
+  # Print results
+  cat("\n=============================\n")
+  cat("ROC for:", biomarker, "\n")
+  cat("=============================\n")
+  cat("AUC:", auc(roc_obj), "\n")
+  
+  # Optimal threshold
+  best <- coords(roc_obj, "best", ret = c("threshold", "sensitivity", "specificity"))
+  print(best)
+  
+  # Plot ROC
+  plot(roc_obj, main = paste("ROC Curve -", biomarker))
+  
+  return(list(model = fit, roc = roc_obj, auc = auc(roc_obj), best = best))
+}
+
+# Run ROC for All Biomarkers in a Loop
+biomarkers <- c("log_NfL", "log_GFAP", "log_AB42_40_ratio", "log_pTau181_recode")
+
+roc_results <- lapply(biomarkers, function(b) run_roc(final, b, case = "Dementia", control = "Normal"))
+names(roc_results) <- biomarkers
+
+# Save ROC plots for each biomarker 
+for (b in biomarkers) { 
+  roc_obj <- roc_results[[b]]$roc 
+  
+  png(filename = paste0("figures/roc_", b, ".png"), width = 1200, height = 900) 
+  plot(roc_obj, main = paste("ROC Curve -", b)) 
+  dev.off() 
+}
+
+# ---- Clustering ----
+
+# Prepare data
+df_clust <- final %>%
+  select(HHID_PN, NfL, GFAP, AB42_40_ratio, pTau181_recode) %>%
+  na.omit()
+
+df_clust <- as.data.frame(df_clust)
+rownames(df_clust) <- df_clust$HHID_PN
+
+df_clust_scaled <- scale(df_clust[, -1])
+
+# Elbow plot
+png("figures/elbow_plot.png", width = 1200, height = 900)
+fviz_nbclust(df_clust_scaled, kmeans, method = "wss") +
+  labs(title = "Optimal Number of Clusters (Elbow Method)")
+dev.off()
+
+# PCA
+pca <- prcomp(df_clust_scaled)
+print(summary(pca))
+
+# K-means
+set.seed(123)
+km <- kmeans(df_clust_scaled, centers = 5, nstart = 25)
+
+# Align cluster assignments
+df_clust_clean <- df_clust[rownames(df_clust_scaled), ]
+df_clust_clean$Cluster <- factor(km$cluster)
+
+# Merge back
+final <- final %>%
+  left_join(df_clust_clean[, c("HHID_PN", "Cluster")], by = "HHID_PN")
+
+# Diagnostics
+print(table(df_clust_clean$Cluster))
+print(table(final$Cluster, final$ATN))
+print(table(final$Cluster, final$Dementia_IMP_2016))
+
+# Cluster profiles
+cluster_profiles <- aggregate(df_clust_clean[, -c(1,6)],
+                              by = list(Cluster = df_clust_clean$Cluster),
+                              FUN = mean)
+
+centroids_melt <- melt(cluster_profiles, id.vars = "Cluster")
+
+# Cluster plot
+png("figures/cluster_plot.png", width = 1200, height = 900)
+fviz_cluster(km, data = df_clust_scaled,
+             geom = "point",
+             ellipse.type = "convex",
+             main = "Cluster Plot of Biomarkers")
+dev.off()
+
+# Cluster centroids plot
+png("figures/cluster_centroids.png", width = 1200, height = 900)
+ggplot(centroids_melt, aes(x = variable, y = value, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Mean Biomarker Levels by Cluster",
+       x = "Biomarker",
+       y = "Mean Value") +
+  theme_minimal()
+dev.off()
+
+# ---- Variational Autoencoder (VAE) with custom training loop ----
+x <- df_clust_scaled
+input_dim <- ncol(x)
+latent_dim <- 2
+intermediate_dim <- 64
+
+vae_model <- keras_model_custom(name = "vae", function(self) {
+  
+  # Encoder layers
+  self$encoder_input <- layer_input(shape = input_dim, name = "encoder_input")
+  self$enc_dense <- layer_dense(units = intermediate_dim, activation = "relu", name = "enc_dense")
+  self$z_mean_layer <- layer_dense(units = latent_dim, name = "z_mean")
+  self$z_log_var_layer <- layer_dense(units = latent_dim, name = "z_log_var")
+  
+  # Decoder layers
+  self$dec_input <- layer_input(shape = latent_dim, name = "z_sampling")
+  self$dec_dense <- layer_dense(units = intermediate_dim, activation = "relu", name = "dec_dense")
+  self$dec_output <- layer_dense(units = input_dim, activation = "linear", name = "dec_output")
+  
+  # Encoder forward
+  encode <- function(x) {
+    h <- self$enc_dense(x)
+    z_mean <- self$z_mean_layer(h)
+    z_log_var <- self$z_log_var_layer(h)
+    epsilon <- k_random_normal(shape = k_shape(z_mean))
+    z <- z_mean + k_exp(0.5 * z_log_var) * epsilon
+    list(z, z_mean, z_log_var)
+  }
+  
+  # Decoder forward
+  decode <- function(z) {
+    h_dec <- self$dec_dense(z)
+    self$dec_output(h_dec)
+  }
+  
+  # Call method
+  self$call <- function(inputs, training = FALSE) {
+    res <- encode(inputs)
+    z <- res[[1]]
+    z_mean <- res[[2]]
+    z_log_var <- res[[3]]
+    reconstructed <- decode(z)
+    
+    self$z_mean <- z_mean
+    self$z_log_var <- z_log_var
+    self$z <- z
+    
+    reconstructed
+  }
+  
+  # Custom train_step
+  self$train_step <- function(data) {
+    with(tf$GradientTape() %as% tape, {
+      reconstructed <- self(data, training = TRUE)
+      recon_loss <- tf$reduce_mean(tf$reduce_sum(tf$math$square(data - reconstructed), axis = 1L))
+      kl_loss <- -0.5 * tf$reduce_mean(tf$reduce_sum(1 + self$z_log_var - tf$math$square(self$z_mean) - tf$math$exp(self$z_log_var), axis = 1L))
+      total_loss <- recon_loss + kl_loss
+    })
+    gradients <- tape$gradient(total_loss, self$trainable_variables)
+    self$optimizer$apply_gradients(purrr::transpose(list(gradients, self$trainable_variables)))
+    list(loss = total_loss, recon_loss = recon_loss, kl_loss = kl_loss)
+  }
+  
+  # Encoder/decoder models
+  self$encoder <- keras_model(
+    inputs = self$encoder_input,
+    outputs = list(
+      self$z_mean_layer(self$enc_dense(self$encoder_input)),
+      self$z_log_var_layer(self$enc_dense(self$encoder_input))
+    ),
+    name = "encoder_model"
+  )
+  
+  self$decoder <- keras_model(
+    inputs = self$dec_input,
+    outputs = self$dec_output(self$dec_dense(self$dec_input)),
+    name = "decoder_model"
+  )
+})
+
+vae_model %>% compile(optimizer = "adam")
+
+# ---- Callbacks ----
+callbacks_list <- list(
+  callback_early_stopping(monitor = "loss", patience = 10, restore_best_weights = TRUE),
+  callback_reduce_lr_on_plateau(monitor = "loss", factor = 0.5, patience = 5, min_lr = 1e-6)
+)
+
+# ---- Train VAE ----
+history <- vae_model %>% fit(
+  x,
+  epochs = 50,
+  batch_size = 32,
+  callbacks = callbacks_list,
+  verbose = 1
+)
+
+# ---- Save encoder and decoder ----
+vae_model$encoder %>% compile(optimizer = "adam", loss = "mse")
+vae_model$decoder %>% compile(optimizer = "adam", loss = "mse")
+
+save_model_hdf5(vae_model$encoder, "encoder_model.h5")
+save_model_hdf5(vae_model$decoder, "decoder_model.h5")
+
+# ---- Reload if needed (optional) ----
+encoder_loaded <- load_model_hdf5("encoder_model.h5") %>% compile(optimizer = "adam", loss = "mse")
+decoder_loaded <- load_model_hdf5("decoder_model.h5") %>% compile(optimizer = "adam", loss = "mse")
+
+# ---- Latent space extraction ----
+encoded_means <- predict(vae_model$encoder, x)[[1]]
+latent <- as.data.frame(encoded_means)
+colnames(latent) <- c("z1", "z2")
+latent$ATN <- final$ATN[match(rownames(df_clust), final$HHID_PN)]
+
+ggplot(latent, aes(x = z1, y = z2, color = ATN)) +
+  geom_point(alpha = 0.6) +
+  theme_minimal() +
+  labs(
+    title = "VAE Latent Space by ATN Endotype",
+    x = "Latent dimension 1",
+    y = "Latent dimension 2"
+  )
+
+# Export the latent plot
+if (!dir.exists("figures")) dir.create("figures") 
+ggsave("figures/vae_latent_space.png", width = 6, height = 5)
+
+# Save latent coordinates
+if (!dir.exists("results")) dir.create("results") 
+save(latent, file = "results/vae_latent.RData")
+
+# Document the training history
+save(history, file = "results/vae_training_history.RData")
+
+
+# ---- Save VAE training curves ----
+loss_df <- data.frame(
+  epoch = 1:length(history$metrics$loss),
+  loss = history$metrics$loss,
+  recon_loss = history$metrics$recon_loss,
+  kl_loss = history$metrics$kl_loss,
+  lr = history$metrics$lr
+)
+
+loss_melt <- reshape2::melt(loss_df, id.vars = "epoch")
+
+if (!dir.exists("figures")) dir.create("figures")
+# Create the plot
+vae_plot <- ggplot(loss_melt, aes(x = epoch, y = value, color = variable)) +
+  geom_line() +
+  geom_point(size = 1) +
+  theme_minimal() +
+  labs(title = "VAE Training Curves", x = "Epoch", y = "Value")
+
+# Save the plot
+ggsave("figures/vae_training_curves.png", plot = vae_plot, width = 8, height = 6)
+
+# ---- Transcriptomics Integration (I did not work on this part of the project) ----
+# transcriptome_data <- read_csv("TheDataSet.csv") # I never had access to this data the team that did it had access to it
+
+# final_omics <- final %>%
+#   inner_join(transcriptome_data, by = "HHID_PN")
+
+# gene_cols <- grep("^gene", colnames(final_omics), value = TRUE)
+
+# dds <- DESeqDataSetFromMatrix(
+#   countData = as.matrix(final_omics[, gene_cols]),
+#   colData = final_omics[, c("ATN")],
+#   design = ~ ATN
+# )
+
+# dds <- DESeq(dds)
+# res <- results(dds)
+# sig <- res[which(res$padj < 0.05), ]
+# head(sig)
