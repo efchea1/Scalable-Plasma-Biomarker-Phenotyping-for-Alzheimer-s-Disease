@@ -6,32 +6,32 @@ This repository contains a reproducible analysis pipeline for characterizing Alz
 
 ## Repository structure
 
-- **AnalysisReport/**  
+- **AnalysisReport**  
   Contains the main R Markdown analysis (`analysis_report.Rmd`) and rendered outputs (e.g., `html`), documenting the full pipeline from data preprocessing to VAE-based latent representation.
 
 - **Archive/**  
   Legacy or intermediate scripts, figures, or objects not used in the main pipeline but retained for reference.
 
-- **Data/**  
+- **Data**  
   Placeholder for input data (HRS biomarker, cognition, and related files).  
   **Note:** Raw HRS data are restricted and are **not** stored in this repository. Users must obtain appropriate access and place data files here following the expected filenames and structure described below.
 
-- **Figures/**  
+- **Figures**  
   Exported plots, including:
   - ROC curves for individual biomarkers  
   - Clustering diagnostics (elbow plot, cluster assignments, cluster centroids)  
   - VAE latent space by ATN endotype  
   - VAE training curves (loss, reconstruction loss, KL divergence, learning rate)
 
-- **Models/**  
+- **Models**  
   Saved Keras/TensorFlow model objects, such as:
   - `encoder_model.h5`  
   - `decoder_model.h5`
 
-- **R_Folder/**  
+- **R_Folder**  
   Modular R scripts implementing each analysis stage (e.g., preprocessing, ATN derivation, ROC modeling, clustering, and VAE).
 
-- **Results/**  
+- **Results**  
   Serialized results objects used by the analysis and for downstream interpretation, including:
   - Cluster assignments and summaries  
   - VAE latent coordinates (`vae_latent.RData`)  
