@@ -374,25 +374,3 @@ save(history, file = "results/vae_training_history.RData")
 # head(sig)
 
 ```
-
-
-```{r}
-# ---- Transcriptomics Integration (I did not work on this part of the project) ----
-# transcriptome_data <- read_csv("transcriptome_data.csv")
-
-# final_omics <- final %>%
-#   inner_join(transcriptome_data, by = "HHID_PN")
-
-# gene_cols <- grep("^gene", colnames(final_omics), value = TRUE)
-
-# dds <- DESeqDataSetFromMatrix(
-#   countData = as.matrix(final_omics[, gene_cols]),
-#   colData = final_omics[, c("ATN")],
-#   design = ~ ATN
-# )
-
-# dds <- DESeq(dds)
-# res <- results(dds)
-# sig <- res[which(res$padj < 0.05), ]
-# head(sig)
-```
