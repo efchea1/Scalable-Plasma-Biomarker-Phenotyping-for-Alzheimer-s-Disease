@@ -1,5 +1,3 @@
-# Scalable-Plasma-Biomarker-Phenotyping-for-Alzheimer-s-Disease
-
 # Scalable Plasma Biomarker Phenotyping for Alzheimer’s Disease
 
 This repository contains a reproducible analysis pipeline for characterizing Alzheimer’s disease heterogeneity using plasma biomarkers, ATN endotyping, clustering, and variational autoencoding (VAE). The workflow is built around the Health and Retirement Study (HRS) biomarker and cognition data and is designed to be scalable, interpretable, and transparent for reviewers, collaborators, and future extensions (e.g., omics integration).
