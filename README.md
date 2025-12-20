@@ -6,13 +6,20 @@
 
 # Overview
 
-This repository provides a **comprehensive, reproducible analysis pipeline** for characterizing Alzheimer's disease (AD) heterogeneity using plasma biomarkers from the **Health and Retirement Study (HRS) 2016 Venous Blood Study**. The workflow integrates:
+This repository contains a **comprehensive, fully reproducible analysis pipeline** for characterizing Alzheimer’s disease (AD) heterogeneity using plasma biomarkers from the **Health and Retirement Study (HRS) 2016 Venous Blood Study**.
 
-* **Theory-driven classification** using the ATN (Amyloid/Tau/Neurodegeneration) framework
-* **Data-driven unsupervised clustering** (k-means with optimal k selection)
-* **Deep learning dimensionality reduction** (Variational Autoencoder)
-* **Comprehensive validation** (ROC analysis, bootstrap stability, sensitivity analyses)
-* **Methodological comparison** of classification approaches
+**The workflow integrates:**
+* **Theory‑driven classification** using the ATN (Amyloid / Tau / Neurodegeneration) framework
+* **Data‑driven unsupervised clustering** with optimal‑K selection
+* **Deep learning dimensionality reduction** using a Variational Autoencoder (VAE)
+* **Nonlinear visualization** (UMAP, t‑SNE)
+* **Cluster stability** via bootstrapped Jaccard indices
+* **Survey‑weighted analyses** using HRS sampling weights
+* **Sensitivity analyses** across K, ATN cutoffs, and VAE architectures
+* **Explainability** using SHAP values for VAE latent dimensions
+* **Methodological comparison** across ATN, clustering, PCA, and VAE
+
+The pipeline is designed for **scientific transparency**, **scalability**, and **reviewer‑friendly reproducibility**.
 
 # Set working directory
 setwd("path/to/repository")
