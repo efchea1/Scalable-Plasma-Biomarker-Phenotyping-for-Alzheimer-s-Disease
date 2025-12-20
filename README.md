@@ -1,4 +1,5 @@
-# Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches
+# Scalable Plasma Biomarker Phenotyping for Alzheimer’s Disease
+**Integrative ATN Framework * Unsupervised Clustering * Deep Learning (VAE) * Stability & Sensitivity Analyses**
 
 # Overview
 
