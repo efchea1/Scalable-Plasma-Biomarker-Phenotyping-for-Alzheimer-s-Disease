@@ -1,3 +1,6 @@
+# Motivation & Goal
+This repository implements a scalable, reproducible framework for plasma biomarker phenotyping in the Health and Retirement Study (HRS). It compares theory‑driven ATN classification with data‑driven phenotypes (k‑means, PCA, VAE) and evaluates cognitive and demographic correlates in a population‑representative cohort. The goal is to advance early detection and heterogeneity modeling in Alzheimer’s disease.
+
 # Scalable Plasma Biomarker Phenotyping for Alzheimer’s Disease
 * **Integrative ATN Framework**
 * **Unsupervised Clustering**
