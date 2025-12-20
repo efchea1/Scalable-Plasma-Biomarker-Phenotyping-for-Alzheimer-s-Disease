@@ -23,7 +23,7 @@ The pipeline is designed for **scientific transparency**, **scalability**, and *
 
 # Repository Structure
 
-| Folder / File | Description |
+| **Folder / File** | **Description** |
 |---------------|-------------|
 | **AnalysisReport/** | Full R Markdown pipeline (`analysis_report.Rmd`) documenting the entire workflow |
 | **R_Folder/** | Modular R scripts for each analysis stage (preprocessing, ATN, clustering, VAE, etc.) |
