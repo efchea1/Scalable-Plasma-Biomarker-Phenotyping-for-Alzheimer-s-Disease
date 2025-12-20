@@ -23,14 +23,14 @@ The pipeline is designed for **scientific transparency**, **scalability**, and *
 
 # Repository Structure
 
-| **Folder / File** | **Description** |
+| **Folder & File** | **Description** |
 |---------------|-------------|
-| **AnalysisReport/** | Full R Markdown pipeline (`analysis_report.Rmd`) documenting the entire workflow |
-| **R_Folder/** | Modular R scripts for each analysis stage (preprocessing, ATN, clustering, VAE, etc.) |
-| **Figures/** | All exported plots (ROC curves, clustering diagnostics, VAE visualizations, UMAP/t‑SNE, etc.) |
-| **Results/** | Saved models, latent spaces, training histories, and serialized analysis objects |
-| **Tables/** | CSV outputs for all statistical tables and summaries |
-| **Data/** | *(Empty)* — user must supply HRS SAS files locally; raw HRS data are not included |
+| **AnalysisReport** | Full R Markdown pipeline (`analysis_report.Rmd`) documenting the entire workflow |
+| **R_Folder** | Modular R scripts for each analysis stage (preprocessing, ATN, clustering, VAE, etc.) |
+| **Figures** | All exported plots (ROC curves, clustering diagnostics, VAE visualizations, UMAP/t‑SNE, etc.) |
+| **Results** | Saved models, latent spaces, training histories, and serialized analysis objects |
+| **Tables** | CSV outputs for all statistical tables and summaries |
+| **Data** | *(Empty)* — user must supply HRS SAS files locally; raw HRS data are not included |
 | **utils.R** | Shared helper functions used across scripts |
 | **README.md** | Project documentation (this file) |
 
