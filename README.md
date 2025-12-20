@@ -10,8 +10,6 @@ This repository provides a **comprehensive, reproducible analysis pipeline** for
 * **Comprehensive validation** (ROC analysis, bootstrap stability, sensitivity analyses)
 * **Methodological comparison** of classification approaches
 
----
-
 # Set working directory
 setwd("path/to/repository")
 
@@ -25,7 +23,6 @@ source("R_Folder/03_roc_analysis.R")
 source("R_Folder/04_clustering.R")
 source("R_Folder/05_vae_training.R")
 source("R_Folder/06_method_comparison.R")
-```
 
 **Expected Runtime:**
 - Data preparation: 5 minutes
@@ -34,8 +31,6 @@ source("R_Folder/06_method_comparison.R")
 - VAE training (50 epochs): 20 minutes
 - Sensitivity analyses: 30 minutes
 - **Total: ~1.5-2 hours** (Intel i7, 16GB RAM)
-
----
 
 ## 📊 Analysis Pipeline
 
@@ -140,16 +135,14 @@ source("R_Folder/06_method_comparison.R")
 ### 6. Variational Autoencoder (VAE)
 
 **Architecture:**
-```
+
 Input (4D) → Dense(64) → Latent(2D) → Dense(64) → Output(4D)
               ↓
          z_mean, z_log_var → Sampling → Decoder
-```
 
 **Loss Function:**
-```
+
 Total Loss = Reconstruction Loss (MSE) + KL Divergence
-```
 
 **Training:**
 - 50 epochs with early stopping (patience=10)
@@ -202,8 +195,6 @@ Total Loss = Reconstruction Loss (MSE) + KL Divergence
 - `tables/method_comparison_comprehensive.csv`
 - `tables/method_agreement_matrix.csv`
 
----
-
 ## 📈 Key Results Summary
 
 **Sample Characteristics:**
@@ -225,26 +216,20 @@ Total Loss = Reconstruction Loss (MSE) + KL Divergence
 - Biomarkers differ significantly across clusters (all p < 0.05)
 - Cognition associated with both ATN (p = [value]) and clusters (p = [value])
 
----
-
 ## 📝 Publications & Citations
 
 **Preprint:** [Link pending]  
 **Published:** [Journal name, DOI pending]
 
 **If you use this code, please cite:**
-```
+
 Chea, E.F. (2024). Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: 
 Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches. 
 GitHub repository: https://github.com/[your-username]/[repo-name]
 
----
-
 ### Transcriptomics integration (scaffolded)
    - The repository includes commented code illustrating how transcriptomic data could be integrated using DESeq2 to relate ATN/latent structure to gene expression.
    - This section is intentionally scaffolded and not executed for this project.
-
----
 
 ### Running the Analysis
 **Full Pipeline**
