@@ -2,7 +2,7 @@
 
 # Overview
 
-This repository provides a comprehensive, reproducible analysis pipeline for characterizing Alzheimer's disease (AD) heterogeneity using plasma biomarkers from the Health and Retirement Study (HRS) 2016 Venous Blood Study. The workflow integrates:
+This repository provides a **comprehensive, reproducible analysis pipeline** for characterizing Alzheimer's disease (AD) heterogeneity using plasma biomarkers from the **Health and Retirement Study (HRS) 2016 Venous Blood Study**. The workflow integrates:
 
 * **Theory-driven classification** using the ATN (Amyloid/Tau/Neurodegeneration) framework
 * **Data-driven unsupervised clustering** (k-means with optimal k selection)
@@ -100,16 +100,26 @@ The pipeline proceeds in the following stages (see `AnalysisReport/analysis_repo
 
 ## How to run the analysis
 
-### 1. Prerequisites
+### 1. Required R Packages
 
-- **R** (version ≥ 4.x recommended)  
-- Suggested IDE: RStudio  
-- Required R packages:
-  - `dplyr`, `tidyr`, `ggplot2`, `haven`, `nnet`, `pROC`, `keras`, `tensorflow`,  
-    `DESeq2`, `corrplot`, `pheatmap`, `factoextra`, `cluster`, `GGally`, `readr`,  
-    `reshape2`, and their dependencies.
+# Core data manipulation
+install.packages(c("dplyr", "tidyr", "haven", "readr"))
 
-Install any missing packages using `install.packages()` and, for Bioconductor packages like `DESeq2`, via:
+# Visualization
+install.packages(c("ggplot2", "corrplot", "pheatmap", "GGally", 
+                   "factoextra", "ggdendro", "gridExtra", "reshape2"))
+
+# Statistical analysis
+install.packages(c("pROC", "nnet", "cluster", "mclust", 
+                   "NbClust", "aricode", "naniar"))
+
+# Deep learning
+install.packages(c("keras", "tensorflow"))
+
+# Bioconductor (for potential omics integration)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("DESeq2")
 
 ```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
