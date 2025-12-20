@@ -123,9 +123,11 @@ source("R_Folder/06_method_comparison.R")
 3. **NbClust consensus** (30+ validation indices)
 
 **Validation:**
-- Mean silhouette width
-- Bootstrap stability (50 iterations, 80% subsampling)
-- Dunn index, connectivity metrics
+- Silhouette width
+- Bootstrap stability (Jaccard index)
+- Dunn index & connectivity
+- Cluster centroids heatmap
+- Biomarker distributions by cluster
 
 **Cluster Characterization:**
 - Demographics, biomarker profiles, cognitive status
@@ -166,77 +168,87 @@ Input (4D) → Dense(64) → Latent(2D) → Dense(64) → Output(4D)
 
 Total Loss = Reconstruction Loss (MSE) + KL Divergence
 
-**Training:**
-- 50 epochs with early stopping (patience=10)
-- Learning rate reduction on plateau
-- Batch size: 32
+**Training**
+- 50 epochs
+- Early stopping (patience = 10)
+- Reduce‑LR‑on‑plateau
+- Batch size = 32
 
-**Validation:**
-- Reconstruction quality
-- Latent space cluster separation (silhouette)
-- Correlation with original biomarkers
-- Comparison to PCA (variance explained)
+**Explainability**
+- **SHAP values** for latent dimensions
+(Python via reticulate; optional)
 
-**Key Files:**
+**Validation**
+- Reconstruction loss
+- KL divergence
+- Latent space silhouette
+- Correlation with biomarkers
+- PCA vs VAE comparison
+
+**Files**
 - `results/encoder_model.h5`
 - `results/decoder_model.h5`
-- `results/vae_latent.RData`
-- `figures/vae_latent_space.png`
+- `results/latent_representations.RData`
 - `figures/vae_training_curves.png`
 - `figures/pca_vs_vae_comparison.png`
+- `figures/vae_latent_correlations.png`
 
-### 7. Sensitivity Analyses
+### 7. Nonlinear Visualization (UMAP + t‑SNE)
+**Purpose:** Reveal nonlinear structure in biomarker space
+
+**Methods:**
+- UMAP (default parameters)
+- t‑SNE (perplexity = 30)
+
+**Files**
+- `figures/umap_clusters.png`
+- `figures/tsne_clusters.png`
+
+### 8. Sensitivity Analyses
 
 **Tests Conducted:**
-1. **Alternative ATN cutoffs:** Quartile-based thresholds
-2. **VAE architectures:** Latent dimensions (2, 3, 4, 5)
-3. **Clustering solutions:** k±1 comparison
-4. **Missing data patterns:** Relationship with demographics/outcomes
+* Silhouette across K = 2–8
+* Alternative ATN cutoffs (quartiles)
+* VAE latent dimensions = 2, 3, 4, 5
+* Missingness vs demographics
+* Cluster robustness under resampling
 
 **Key Files:**
-- `tables/sensitivity_analyses_summary.csv`
-- `tables/sensitivity_atn_cutoffs_crosstab.csv`
+- `tables/sensitivity_k_values.csv`
+- `figures/sensitivity_k_values.png`
+- `tables/sensitivity_vae_architectures.csv`
 
-### 8. Comprehensive Method Comparison
+### 9. Survey‑Weighted Analyses (HRS PVBSWGTR)
 
-**Compared Approaches:**
-1. ATN Framework (theory-driven)
-2. K-means Clustering (data-driven, unsupervised)
-3. VAE Latent Space (data-driven, deep learning)
-4. PCA (data-driven, linear)
+**Design:**  
+`svydesign(ids = SECU, strata = STRATUM, weights = PVBSWGTR)`
 
-**Evaluation Criteria:**
-- Number of groups/dimensions
-- Cluster quality (silhouette)
-- Variance explained
-- Cognitive association
-- Interpretability
-- Advantages/limitations
+**Outputs**
+* Weighted mean age by ATN
+* Weighted cognition by ATN
 
-**Key Files:**
+**Files**
+- `tables/weighted_age_by_atn.csv`
+- `tables/weighted_cognition_by_atn.csv`
+
+### 10. Comprehensive Method Comparison
+
+**Methods Compared**
+1. ATN Framework
+2. K‑means Clustering
+3. VAE Latent Space
+4. PCA
+
+**Criteria**
+* Number of groups
+* Silhouette
+* Variance explained
+* Cognitive association
+* Interpretability
+* Advantages & limitations
+
+**Files**
 - `tables/method_comparison_comprehensive.csv`
-- `tables/method_agreement_matrix.csv`
-
-## 📈 Key Results Summary
-
-**Sample Characteristics:**
-- N = [Your N] participants from HRS 2016 VBS
-- Complete biomarker data: [N with 4 biomarkers]
-- Age: Mean ± SD
-- Female: [%]
-
-**Primary Findings:**
-1. **ATN-Cluster Agreement:** ARI = [value], NMI = [value]
-   - Interpretation: [Moderate/Low] alignment
-2. **Best Predictive Biomarker:** [NfL/GFAP/etc.] (AUC = [value])
-3. **Optimal Clusters:** k = [4-5] with silhouette = [value]
-4. **Clustering Stability:** Mean bootstrap ARI = [value]
-5. **VAE vs PCA:** VAE [outperforms/underperforms] in cluster separation
-
-**Statistical Significance:**
-- All p-values corrected for multiple comparisons (Benjamini-Hochberg)
-- Biomarkers differ significantly across clusters (all p < 0.05)
-- Cognition associated with both ATN (p = [value]) and clusters (p = [value])
 
 ## 📝 Publications & Citations
 
@@ -250,8 +262,8 @@ Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches
 GitHub repository: [Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches](https://github.com/efchea1/Scalable-Plasma-Biomarker-Phenotyping-for-Alzheimer-s-Disease)
 
 ### Transcriptomics integration (scaffolded)
-   - The repository includes commented code illustrating how transcriptomic data could be integrated using DESeq2 to relate ATN/latent structure to gene expression.
-   - This section is intentionally scaffolded and not executed for this project.
+* The repository includes commented code demonstrating how **DESeq2** could be used to integrate transcriptomic data with ATN or VAE latent structure.
+* This section is **not executed** in the current analysis.
 
 ### Running the Analysis
 **Full Pipeline**
@@ -263,21 +275,17 @@ rmarkdown::render("AnalysisReport/analysis_report.Rmd")
 
 ### 1. Required R Packages
 
-# Core data manipulation
-install.packages(c("dplyr", "tidyr", "haven", "readr"))
-
-# Visualization
-install.packages(c("ggplot2", "corrplot", "pheatmap", "GGally", 
-                   "factoextra", "ggdendro", "gridExtra", "reshape2"))
-
-# Statistical analysis
-install.packages(c("pROC", "nnet", "cluster", "mclust", 
-                   "NbClust", "aricode", "naniar"))
+install.packages(c(
+  "dplyr","tidyr","haven","readr","ggplot2","corrplot","pheatmap",
+  "GGally","factoextra","ggdendro","gridExtra","reshape2","pROC",
+  "nnet","cluster","mclust","NbClust","aricode","naniar","fpc",
+  "umap","Rtsne","survey"
+))
 
 # Deep learning
-install.packages(c("keras", "tensorflow"))
+install.packages(c("keras","tensorflow"))
 
-# Bioconductor (for potential omics integration)
+# Bioconductor
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("DESeq2")
