@@ -26,6 +26,7 @@ The pipeline is designed for **scientific transparency**, **scalability**, and *
 | **Folder & File** | **Description** |
 |---------------|-------------|
 | **AnalysisReport** | Full R Markdown pipeline (`analysis_report.Rmd`) documenting the entire workflow |
+| **Archive** | Full R pipelines (`Alzheimer’s Biomarker + ATN + VAE + Omics Pipeline.R`) |
 | **R_Folder** | Modular R scripts for each analysis stage (preprocessing, ATN, clustering, VAE, etc.) |
 | **Figures** | All exported plots (ROC curves, clustering diagnostics, VAE visualizations, UMAP/t‑SNE, etc.) |
 | **Results** | Saved models, latent spaces, training histories, and serialized analysis objects |
