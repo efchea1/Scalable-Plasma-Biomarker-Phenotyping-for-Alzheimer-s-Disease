@@ -1,15 +1,15 @@
-# Motivation & Goal
-This repository implements a scalable, reproducible framework for plasma biomarker phenotyping in the Health and Retirement Study (HRS). It compares theory‑driven ATN classification with data‑driven phenotypes (k‑means, PCA, VAE) and evaluates cognitive and demographic correlates in a population‑representative cohort. The goal is to advance early detection and heterogeneity modeling in Alzheimer’s disease.
-
 # Scalable Plasma Biomarker Phenotyping for Alzheimer’s Disease
-* **Integrative ATN Framework**
-* **Unsupervised Clustering**
-* **Deep Learning (VAE)**
-* **Stability & Sensitivity Analyses**
 
-# Overview 
+# Overview
+This repository implements a scalable, reproducible framework for plasma biomarker phenotyping in the **Health and Retirement Study (HRS) 2016 Venous Blood Study**. It compares theory‑driven ATN classification with data‑driven phenotypes (k‑means, PCA, VAE) and evaluates cognitive and demographic correlates in a population‑representative cohort. The goal is to advance early detection and heterogeneity modeling in Alzheimer’s disease.
 
-This repository contains a **comprehensive, fully reproducible analysis pipeline** for characterizing Alzheimer’s disease (AD) heterogeneity using plasma biomarkers from the **Health and Retirement Study (HRS) 2016 Venous Blood Study**.
+## Key Features
+- ATN classification with literature-based cutoffs
+- Unsupervised clustering with stability diagnostics (NbClust, bootstrapped Jaccard)
+- Variational Autoencoder latent phenotyping
+- Survey‑weighted population inference (HRS complex design)
+- Full reproducibility with modular R scripts
+- Comprehensive sensitivity analyses (cutoffs, k-selection, VAE architecture)
 
 **The workflow integrates:**
 * **Theory‑driven classification** using the ATN (Amyloid / Tau / Neurodegeneration) framework
@@ -259,7 +259,15 @@ Total Loss = Reconstruction Loss (MSE) + KL Divergence
 **Preprint:** [Link pending]  
 **Published:** [Journal name, DOI pending]
 
-**If you use this code, please cite:**
+## Future Work
+- External validation in ADNI, AIBL, and NACC
+- Equity and transportability analyses across demographic subgroups
+- Survey‑weighted clustering and latent modeling
+- Integration with transcriptomics or proteomics datasets
+- Longitudinal modeling of cognitive decline using HRS follow-up waves
+
+## How to Cite
+If you use this code or framework in your research, please cite this repository:
 
 Chea, E.F. (2024). Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: 
 Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches. 
