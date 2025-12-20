@@ -302,10 +302,10 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("DESeq2")
 
+## License
+This project is released under the MIT License. See the LICENSE file for details.
+
 ```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("DESeq2")
-
-# License
-This project is released under the MIT License. See the LICENSE file for details.
