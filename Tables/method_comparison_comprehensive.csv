@@ -1,0 +1,5 @@
+"Method","Approach","N_Groups","Mean_Silhouette","Variance_Explained","Cognitive_Association","Interpretability","Advantages","Limitations"
+"ATN Framework","Theory-driven",14,NA,NA,"< 0.001","High","Clinical relevance; validated cutoffs","Binary cutoffs lose information; platform-specific"
+"K-Means Clustering","Data-driven (unsupervised)",4,0.473797090249025,NA,"< 0.001","Medium","Discovers natural groupings; no assumptions","Requires k selection; assumes spherical clusters"
+"VAE Latent Space","Data-driven (deep learning)",NA,0.540177279558672,NA,NA,"Low","Non-linear relationships; dimensionality reduction","Black box; requires tuning"
+"PCA","Data-driven (linear)",NA,0.507498198991238,67.1,NA,"High","Simple; variance maximization","Linear only; may miss non-linear patterns"

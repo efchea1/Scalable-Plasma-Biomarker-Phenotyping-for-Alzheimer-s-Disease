@@ -1,0 +1,4 @@
+"Metric","Value","P_value"
+"Adjusted Rand Index",0.119,NA
+"Normalized Mutual Information",0.113,NA
+"Chi-square test",NA,"< 0.001"
