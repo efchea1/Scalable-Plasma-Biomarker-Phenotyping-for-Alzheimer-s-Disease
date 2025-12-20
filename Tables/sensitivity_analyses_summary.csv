@@ -1,5 +1,0 @@
-"Analysis","Finding","Interpretation"
-"Alternative ATN cutoffs (quartile)","ARI = 0.316 with quartile cutoffs","Moderate agreement"
-"VAE latent dimension selection","Optimal latent_dim = 5","Supports dimensionality choice"
-"Alternative clustering (k±1)","Best k = 3","Suggests alternative k"
-"Missing data pattern","99.1% with complete biomarkers","Missing not at random - potential bias"
