@@ -31,7 +31,7 @@ The pipeline is designed for **scientific transparency**, **scalability**, and *
 | **Figures** | All exported plots (ROC curves, clustering diagnostics, VAE visualizations, UMAP/t‑SNE, etc.) |
 | **Results** | Saved models, latent spaces, training histories, and serialized analysis objects |
 | **Tables** | CSV outputs for all statistical tables and summaries |
-| **Data** | *(Empty)* - user must supply HRS SAS files locally; raw HRS data are not included |
+| **Data** | *(Empty)* - users must obtain HRS data through the official portal; raw HRS data are not included |
 | **utils.R** | Shared helper functions used across scripts |
 | **README.md** | Project documentation (this file) |
 
