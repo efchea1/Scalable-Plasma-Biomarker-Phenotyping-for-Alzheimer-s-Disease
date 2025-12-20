@@ -21,6 +21,19 @@ This repository contains a **comprehensive, fully reproducible analysis pipeline
 
 The pipeline is designed for **scientific transparency**, **scalability**, and **reviewer‑friendly reproducibility**.
 
+# Repository Structure
+Scalable-Plasma-Biomarker-Phenotyping-for-Alzheimer-s-Disease/
+│
+├── AnalysisReport/               # Full R Markdown pipeline (analysis_report.Rmd)
+├── R_Folder/                     # Modular R scripts for each analysis stage
+├── Figures/                      # All exported plots
+├── Results/                      # Saved models, latent spaces, histories
+├── Tables/                       # CSV outputs for all statistical tables
+├── Data/                         # (Empty) — user must supply HRS SAS files
+├── utils.R                       # Shared helper functions
+└── README.md                     # This file
+
+
 # Set working directory
 setwd("path/to/repository")
 
