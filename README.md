@@ -58,19 +58,16 @@ source("R_Folder/06_method_comparison.R")
 - **Total: ~1.5-2 hours** (Intel i7, 16GB RAM)
 
 ## 📊 Analysis Pipeline
-
 ### 1. Data Preparation & Quality Control
+**Input:** Raw HRS SAS files
+**Output:** Clean merged dataset with QC summaries
+* Merge biomarker, tracking, and cognition files using HHID_PN
+* Derive composite cognition score (0–27)
+* Classify cognitive status: Normal / CIND / Dementia
+* Generate CONSORT‑style flowchart
+* Missingness analysis across biomarkers & demographics
 
-**Input:** Raw HRS SAS files  
-**Output:** Merged analytical dataset with QC metrics
-
-- Merge tracking, biomarker, and cognitive data by `HHID_PN`
-- Derive composite cognitive scores (0-27 scale)
-- Classify cognitive status: Normal (>11), CIND (7-11), Dementia (≤6)
-- Generate CONSORT flowchart documenting exclusions
-- Assess missingness patterns
-
-**Key Files:**
+**Key Outputs**
 - `tables/sample_flowchart.csv`
 - `tables/missing_data_summary.csv`
 
