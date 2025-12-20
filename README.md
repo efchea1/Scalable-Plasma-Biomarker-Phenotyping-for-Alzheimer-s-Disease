@@ -34,13 +34,14 @@ The pipeline is designed for **scientific transparency**, **scalability**, and *
 | **utils.R** | Shared helper functions used across scripts |
 | **README.md** | Project documentation (this file) |
 
-# Set working directory
+# Running the Pipeline
+**Set working directory**
 setwd("path/to/repository")
 
-# Load utilities
+**Load utilities**
 source("utils.R")
 
-# Run individual modules
+**Run individual modules**
 source("R_Folder/01_data_preparation.R")
 source("R_Folder/02_atn_classification.R")
 source("R_Folder/03_roc_analysis.R")
