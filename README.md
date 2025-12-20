@@ -225,7 +225,7 @@ Total Loss = Reconstruction Loss (MSE) + KL Divergence
 
 Chea, E.F. (2024). Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: 
 Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches. 
-GitHub repository: https://github.com/[https://github.com/efchea1/Scalable-Plasma-Biomarker-Phenotyping-for-Alzheimer-s-Disease]/[repo-name]
+GitHub repository: https://github.com/[repo-name]/[https://github.com/efchea1/Scalable-Plasma-Biomarker-Phenotyping-for-Alzheimer-s-Disease]
 
 ### Transcriptomics integration (scaffolded)
    - The repository includes commented code illustrating how transcriptomic data could be integrated using DESeq2 to relate ATN/latent structure to gene expression.
