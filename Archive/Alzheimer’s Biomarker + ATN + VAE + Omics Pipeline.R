@@ -21,6 +21,11 @@ library(ggdendro)
 library(NbClust)
 library(mclust)
 library(gridExtra)
+library(fpc)
+library(umap)
+library(Rtsne)
+library(reticulate)
+library(survey)
 
 # Reproducibility
 set.seed(123)
@@ -29,6 +34,13 @@ set.seed(123)
 if (!dir.exists("figures")) dir.create("figures")
 if (!dir.exists("results")) dir.create("results")
 if (!dir.exists("tables")) dir.create("tables")
+
+
+# Install and load necessary libraries
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("DESeq2") # For differential expression analysis
+
 
 # ---- Data Prep ----
 
@@ -88,6 +100,7 @@ write.csv(flowchart_data, "tables/sample_flowchart.csv", row.names = FALSE)
 cat("\n=== SAMPLE FLOWCHART ===\n")
 print(flowchart_data)
 cat("\n")
+
 
 # ---- LOG BIOMARKERS + ATN with Literature-Based Cutoffs ----
 
@@ -158,6 +171,7 @@ names(final)
 str(final)
 
 View(final)
+
 
 # ---- Cohort Characterization + Statistical Tables ----
 
@@ -350,6 +364,35 @@ write.csv(table3_p, "tables/table3a_cognition_pvalue.csv", row.names = FALSE)
 # Save pairwise results
 pairwise_mat <- as.data.frame(pairwise_cog$p.value)
 write.csv(pairwise_mat, "tables/table3b_cognition_pairwise.csv")
+
+
+# --- Weighted Descriptive Statistics ---
+
+cat("\n=== WEIGHTED ANALYSIS USING HRS SURVEY WEIGHTS ===\n")
+
+# Remove missing weights and design variables
+final_weighted <- final %>% 
+  filter(!is.na(PVBSWGTR), !is.na(SECU), !is.na(STRATUM))
+
+cat("Rows removed due to missing weights:", nrow(final) - nrow(final_weighted), "\n")
+
+# Survey design object
+design <- svydesign(
+  ids = ~SECU,
+  strata = ~STRATUM,
+  weights = ~PVBSWGTR,
+  data = final_weighted,
+  nest = TRUE
+)
+
+# Weighted mean age by ATN
+weighted_age <- svyby(~PAGE, ~ATN, design, svymean, na.rm = TRUE)
+write.csv(weighted_age, "tables/weighted_age_by_atn.csv", row.names = FALSE)
+
+# Weighted cognition
+weighted_cog <- svyby(~Dementia_Score_Imputed_2016, ~ATN, design, svymean, na.rm = TRUE)
+write.csv(weighted_cog, "tables/weighted_cognition_by_atn.csv", row.names = FALSE)
+
 
 # ---- ROC ANALYSIS ----
 run_roc <- function(data, biomarker, outcome = "Dementia_IMP_2016",
@@ -606,6 +649,47 @@ cat("Final clustering:\n")
 print(table(df_clust_clean$Cluster))
 cat("\n")
 
+
+# ---- Cluster Stability via Bootstrapping ----
+
+cat("\n=== BOOTSTRAPPED CLUSTER STABILITY ===\n")
+
+set.seed(123)
+bootstab <- clusterboot(
+  df_clust_scaled,
+  B = 500,                     # number of bootstrap samples
+  distances = FALSE,
+  bootmethod = "boot",
+  clustermethod = kmeansCBI,
+  k = optimal_k,
+  seed = 123
+)
+
+# Jaccard stability for each cluster
+stab_results <- data.frame(
+  Cluster = 1:optimal_k,
+  Jaccard = round(bootstab$bootmean, 3)
+)
+
+write.csv(stab_results, "tables/cluster_stability_bootstrap.csv", row.names = FALSE)
+
+cat("Cluster stability (Jaccard):\n")
+print(stab_results)
+
+# Save plot
+png("figures/cluster_stability_jaccard.png", width = 900, height = 600)
+barplot(
+  stab_results$Jaccard,
+  names.arg = stab_results$Cluster,
+  col = "steelblue",
+  ylim = c(0,1),
+  main = "Cluster Stability (Bootstrapped Jaccard Index)",
+  ylab = "Jaccard Index"
+)
+abline(h = 0.75, col = "red", lty = 2)
+dev.off()
+
+
 # ---- Cluster Validation ----
 
 # Silhouette analysis
@@ -754,6 +838,44 @@ p_cluster <- fviz_cluster(
 
 ggsave("figures/cluster_plot_pca.png", p_cluster, width = 10, height = 8, dpi = 300)
 
+
+# ---- UMAP and t-SNE Visualization ----
+
+cat("\n=== NONLINEAR VISUALIZATION (UMAP + t-SNE) ===\n")
+
+# UMAP
+set.seed(123)
+umap_res <- umap(df_clust_scaled)
+umap_df <- data.frame(
+  UMAP1 = umap_res$layout[,1],
+  UMAP2 = umap_res$layout[,2],
+  Cluster = df_clust_clean$Cluster
+)
+
+p_umap <- ggplot(umap_df, aes(UMAP1, UMAP2, color = Cluster)) +
+  geom_point(alpha = 0.7) +
+  theme_bw(base_size = 14) +
+  labs(title = "UMAP Projection of Biomarker Space")
+
+ggsave("figures/umap_clusters.png", p_umap, width = 8, height = 6, dpi = 300)
+
+# t-SNE
+set.seed(123)
+tsne_res <- Rtsne(df_clust_scaled, perplexity = 30)
+tsne_df <- data.frame(
+  tSNE1 = tsne_res$Y[,1],
+  tSNE2 = tsne_res$Y[,2],
+  Cluster = df_clust_clean$Cluster
+)
+
+p_tsne <- ggplot(tsne_df, aes(tSNE1, tSNE2, color = Cluster)) +
+  geom_point(alpha = 0.7) +
+  theme_bw(base_size = 14) +
+  labs(title = "t-SNE Projection of Biomarker Space")
+
+ggsave("figures/tsne_clusters.png", p_tsne, width = 8, height = 6, dpi = 300)
+
+
 # Cluster centroids heatmap
 cluster_profiles <- aggregate(
   df_clust_clean[, c("NfL", "GFAP", "AB42_40_ratio", "pTau181_recode")],
@@ -807,6 +929,7 @@ p_boxes <- ggplot(bio_long, aes(x = Cluster, y = Value, fill = Cluster)) +
 
 ggsave("figures/biomarkers_by_cluster_boxplots.png", p_boxes,
        width = 10, height = 8, dpi = 300)
+
 
 # ---- Alignment Metrics: ATN vs Cluster ----
 
@@ -1011,6 +1134,32 @@ colnames(latent_vae) <- c("z1", "z2")
 latent_vae$HHID_PN <- df_clust$HHID_PN
 latent_vae$ATN <- final$ATN[match(latent_vae$HHID_PN, final$HHID_PN)]
 latent_vae$Cluster <- final$Cluster[match(latent_vae$HHID_PN, final$HHID_PN)]
+
+
+# ---- VAE Explainability with SHAP (Optional) ----
+try({
+  shap <- import("shap")
+  np <- import("numpy")
+  
+  cat("\n=== VAE EXPLAINABILITY (SHAP) ===\n")
+  
+  x_np <- np$array(df_clust_scaled)
+  
+  explainer <- shap$KernelExplainer(
+    model = function(z) vae_model$predict(z),
+    data = x_np[1:200, ]
+  )
+  
+  shap_values <- explainer$shap_values(x_np[1:500, ])
+  
+  saveRDS(shap_values, "results/vae_shap_values.rds")
+  
+  png("figures/vae_shap_summary.png", width = 1200, height = 900)
+  shap$summary_plot(shap_values, x_np[1:500, ])
+  dev.off()
+  
+}, silent = TRUE)
+
 
 # ---- PCA for Comparison ----
 pca_full <- prcomp(df_clust_scaled, center = FALSE, scale. = FALSE)
@@ -1707,3 +1856,49 @@ cat("   Results:", length(list.files("results")), "files\n\n")
 cat("========================================\n")
 cat("ANALYSIS COMPLETE\n")
 cat("========================================\n\n")
+
+# Save summary report
+summary_report <- list(
+  sample_size = nrow(final),
+  complete_biomarkers = nrow(df_clust),
+  optimal_k = optimal_k,
+  mean_silhouette = mean_sil_original,
+  ari_atn_cluster = ari_val,
+  nmi_atn_cluster = nmi_val,
+  best_biomarker = test_performance$Biomarker[which.max(test_performance$Test_AUC)],
+  best_auc = max(test_performance$Test_AUC),
+  clustering_stability = mean(ari_scores),
+  pca_variance = sum(var_pca),
+  vae_silhouette = mean_sil_vae,
+  pca_silhouette = mean_sil_pca
+)
+
+saveRDS(summary_report, "results/analysis_summary.rds")
+
+# Create a summary table
+final_summary_table <- data.frame(
+  Metric = names(summary_report),
+  Value = unlist(summary_report)
+)
+
+write.csv(final_summary_table, "tables/analysis_summary.csv", row.names = FALSE)
+
+
+# ---- Transcriptomics Integration (I did not work on this part of the project) ----
+# transcriptome_data <- read_csv("TheDataSet.csv") # I never had access to this data the team that did it had access to it
+
+# final_omics <- final %>%
+#   inner_join(transcriptome_data, by = "HHID_PN")
+
+# gene_cols <- grep("^gene", colnames(final_omics), value = TRUE)
+
+# dds <- DESeqDataSetFromMatrix(
+#   countData = as.matrix(final_omics[, gene_cols]),
+#   colData = final_omics[, c("ATN")],
+#   design = ~ ATN
+# )
+
+# dds <- DESeq(dds)
+# res <- results(dds)
+# sig <- res[which(res$padj < 0.05), ]
+# head(sig)
