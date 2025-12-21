@@ -3,7 +3,7 @@
 # Overview
 This repository implements a scalable, reproducible framework for plasma biomarker phenotyping in the **Health and Retirement Study (HRS) 2016 Venous Blood Study**. It compares theory‑driven ATN classification with data‑driven phenotypes (k‑means, PCA, VAE) and evaluates cognitive and demographic correlates in a population‑representative cohort. The goal is to advance early detection and heterogeneity modeling in Alzheimer’s disease.
 
-## Key Features
+# Key Features
 - ATN classification with literature-based cutoffs
 - Unsupervised clustering with stability diagnostics (NbClust, bootstrapped Jaccard)
 - Variational Autoencoder latent phenotyping
@@ -61,7 +61,7 @@ source("R_Folder/06_method_comparison.R")
 - Sensitivity analyses: 30 minutes
 - **Total: ~1.5-2 hours** (Intel i7, 16GB RAM)
 
-## 📊 Analysis Pipeline
+# 📊 Analysis Pipeline
 ### 1. Data Preparation & Quality Control
 **Input:** Raw HRS SAS files
 **Output:** Clean merged dataset with QC summaries
@@ -254,26 +254,26 @@ Total Loss = Reconstruction Loss (MSE) + KL Divergence
 **Files**
 - `tables/method_comparison_comprehensive.csv`
 
-## 📝 Publications & Citations
+# 📝 Publications & Citations
 
 **Preprint:** [Link pending]  
 **Published:** [Journal name, DOI pending]
 
-## Future Work
+# Future Work
 - External validation in ADNI, AIBL, and NACC
 - Equity and transportability analyses across demographic subgroups
 - Survey‑weighted clustering and latent modeling
 - Integration with transcriptomics or proteomics datasets
 - Longitudinal modeling of cognitive decline using HRS follow-up waves
 
-## How to Cite
+# How to Cite
 If you use this code or framework in your research, please cite this repository:
 
 Chea, E.F. (2024). Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: 
 Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches. 
 GitHub repository: [Scalable Plasma Biomarker Phenotyping for Alzheimer's Disease: Integrative ATN Framework, Unsupervised Clustering, and Deep Learning Approaches](https://github.com/efchea1/Scalable-Plasma-Biomarker-Phenotyping-for-Alzheimer-s-Disease)
 
-### Transcriptomics integration (scaffolded)
+# Transcriptomics integration (scaffolded)
 * The repository includes commented code demonstrating how **DESeq2** could be used to integrate transcriptomic data with ATN or VAE latent structure.
 * This section is **not executed** in the current analysis.
 
@@ -289,7 +289,7 @@ file.edit("AnalysisReport/analysis_report.Rmd")
 rmarkdown::render("AnalysisReport/analysis_report.Rmd")
 ```
 
-### 1. Required R Packages
+# Required R Packages
 
 ```r
 install.packages(c(
@@ -312,9 +312,9 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("DESeq2")
 ```
 
-## License
+# License
 This project is released under the MIT License. See the LICENSE file for details.
 
-## 🤝 Connect
+# 🤝 Connect
 - **LinkedIn:** https://linkedin.com/in/emmanuel-fle-chea  
 - **Email:** emmanuelf.chea@gmail.com
