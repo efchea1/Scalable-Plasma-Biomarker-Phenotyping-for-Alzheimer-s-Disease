@@ -280,27 +280,37 @@ GitHub repository: [Scalable Plasma Biomarker Phenotyping for Alzheimer's Diseas
 ### Running the Analysis
 **Full Pipeline**
 **Open in RStudio**
+```r
 file.edit("AnalysisReport/analysis_report.Rmd")
+```
 
 # Knit document (Ctrl+Shift+K) or:
+```
 rmarkdown::render("AnalysisReport/analysis_report.Rmd")
+```
 
 ### 1. Required R Packages
 
+```r
 install.packages(c(
   "dplyr","tidyr","haven","readr","ggplot2","corrplot","pheatmap",
   "GGally","factoextra","ggdendro","gridExtra","reshape2","pROC",
   "nnet","cluster","mclust","NbClust","aricode","naniar","fpc",
   "umap","Rtsne","survey"
 ))
+```
 
 # Deep learning
+```r
 install.packages(c("keras","tensorflow"))
+```
 
 # Bioconductor
+```r
 if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+  install.packages("BiocManager")
 BiocManager::install("DESeq2")
+```
 
 ## License
 This project is released under the MIT License. See the LICENSE file for details.
@@ -308,8 +318,3 @@ This project is released under the MIT License. See the LICENSE file for details
 ## 🤝 Connect
 - **LinkedIn:** https://linkedin.com/in/emmanuel-fle-chea  
 - **Email:** emmanuelf.chea@gmail.com
-
-```r
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-BiocManager::install("DESeq2")
