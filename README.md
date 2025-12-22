@@ -293,7 +293,7 @@ rmarkdown::render("AnalysisReport/analysis_report.Rmd")
 
 ```r
 install.packages(c(
-"dplyr", "tidyr", ggplot2", "haven",
+"dplyr", "tidyr", "ggplot2", "haven",
 "nnet", "pROC", "keras", "tensorflow",
 "DESeq2", "corrplot", "pheatmap",
 
