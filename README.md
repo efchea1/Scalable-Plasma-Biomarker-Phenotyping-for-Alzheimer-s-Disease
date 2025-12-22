@@ -293,10 +293,13 @@ rmarkdown::render("AnalysisReport/analysis_report.Rmd")
 
 ```r
 install.packages(c(
-  "dplyr","tidyr","haven","readr","ggplot2","corrplot","pheatmap",
-  "GGally","factoextra","ggdendro","gridExtra","reshape2","pROC",
-  "nnet","cluster","mclust","NbClust","aricode","naniar","fpc",
-  "umap","Rtsne","survey"
+"dplyr", "tidyr", ggplot2", "haven",
+"nnet", "pROC", "keras", "tensorflow",
+"DESeq2", "corrplot", "pheatmap",
+
+"factoextra", "cluster", "GGally", "readr", "reshape2", "naniar", "aricode", "ggdendro", "NbClust",
+
+"mclust", "gridExtra", "fpc", "umap", "Rtsne", "reticulate", "survey"
 ))
 ```
 
