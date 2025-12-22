@@ -297,9 +297,12 @@ install.packages(c(
 "nnet", "pROC", "keras", "tensorflow",
 "DESeq2", "corrplot", "pheatmap",
 
-"factoextra", "cluster", "GGally", "readr", "reshape2", "naniar", "aricode", "ggdendro", "NbClust",
+"factoextra", "cluster", "GGally",
+"readr", "reshape2", "naniar",
+"aricode", "ggdendro", "NbClust",
 
-"mclust", "gridExtra", "fpc", "umap", "Rtsne", "reticulate", "survey"
+"mclust", "gridExtra", "fpc", "umap",
+"Rtsne", "reticulate", "survey"
 ))
 ```
 
