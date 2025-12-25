@@ -9,5 +9,5 @@
 "best_auc","0.803"
 "clustering_stability","0.947155416915226"
 "pca_variance","0.67093"
-"vae_silhouette","0.567717166261226"
+"vae_silhouette","0.176340780820652"
 "pca_silhouette","0.507498198991238"

@@ -1,4 +1,4 @@
 "Method","Mean_Silhouette","Variance_Explained"
 "Original (4D)",0.473797090249025,100
 "PCA (2D)",0.507498198991238,67.093
-"VAE (2D)",0.575926188972119,NA
+"VAE (2D)",0.176340780820652,NA
