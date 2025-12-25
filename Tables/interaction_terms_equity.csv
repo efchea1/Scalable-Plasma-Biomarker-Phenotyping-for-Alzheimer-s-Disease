@@ -1,9 +1,0 @@
-"Biomarker","Interaction","P_value"
-"log_NfL","Biomarker × Race (White vs NonWhite)",NA
-"log_NfL","Biomarker × Education",NA
-"log_GFAP","Biomarker × Race (White vs NonWhite)",NA
-"log_GFAP","Biomarker × Education",NA
-"log_AB42_40_ratio","Biomarker × Race (White vs NonWhite)",NA
-"log_AB42_40_ratio","Biomarker × Education",NA
-"log_pTau181_recode","Biomarker × Race (White vs NonWhite)",NA
-"log_pTau181_recode","Biomarker × Education",NA
