@@ -1,0 +1,23 @@
+"Biomarker","Comparison","P_value"
+"log_NfL","AUC(White) vs AUC(Black)",0.954897505802354
+"log_NfL","AUC(White) vs AUC(Hispanic)",0.227683906023177
+"log_NfL","AUC(Black) vs AUC(Hispanic)",0.298129291337018
+"log_NfL","AUC(Male) vs AUC(Female)",0.522013922501554
+"log_GFAP","AUC(White) vs AUC(Black)",0.785793233547179
+"log_GFAP","AUC(White) vs AUC(Hispanic)",0.256165337608092
+"log_GFAP","AUC(Black) vs AUC(Hispanic)",0.433029228567129
+"log_GFAP","AUC(Male) vs AUC(Female)",0.818635214641611
+"log_AB42_40_ratio","AUC(White) vs AUC(Black)",0.798822224874721
+"log_AB42_40_ratio","AUC(White) vs AUC(Hispanic)",0.229609052349331
+"log_AB42_40_ratio","AUC(Black) vs AUC(Hispanic)",0.400022994069925
+"log_AB42_40_ratio","AUC(Male) vs AUC(Female)",0.968012082195231
+"log_pTau181_recode","AUC(White) vs AUC(Black)",0.807589234481745
+"log_pTau181_recode","AUC(White) vs AUC(Hispanic)",0.198948876565064
+"log_pTau181_recode","AUC(Black) vs AUC(Hispanic)",0.338541049321062
+"log_pTau181_recode","AUC(Male) vs AUC(Female)",0.803582420469364
+"log_NfL vs log_GFAP","Overall AUC Comparison",0.327824746794959
+"log_NfL vs log_AB42_40_ratio","Overall AUC Comparison",0.0589466052377323
+"log_NfL vs log_pTau181_recode","Overall AUC Comparison",0.757972688587287
+"log_GFAP vs log_AB42_40_ratio","Overall AUC Comparison",0.0132678466369565
+"log_GFAP vs log_pTau181_recode","Overall AUC Comparison",0.604306516161329
+"log_AB42_40_ratio vs log_pTau181_recode","Overall AUC Comparison",0.9136113464107
