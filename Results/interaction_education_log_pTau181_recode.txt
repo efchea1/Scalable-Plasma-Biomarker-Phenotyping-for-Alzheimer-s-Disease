@@ -1,0 +1,17 @@
+logistf(formula = formula_edu, data = df_full)
+
+Model fitted by Penalized ML
+Coefficients:
+                                  coef   se(coef)  lower 0.95  upper 0.95      Chisq            p method
+(Intercept)                -7.48611403 0.85604313 -9.20638162 -5.82277911        Inf 0.000000e+00      2
+log_pTau181_recode          0.71395713 0.39821270 -0.05217945  1.53070085  3.3219037 6.836263e-02      2
+SCHLYRS                    -0.20632560 0.03021431 -0.26581594 -0.14585126 60.5997174 6.994405e-15      2
+PAGE                        0.08436426 0.01017670  0.06454474  0.10476997        Inf 0.000000e+00      2
+GENDER_factorFemale        -0.18634465 0.17878443 -0.53794480  0.16797075  1.0690276 3.011652e-01      2
+RACE_COLLAPSEDNonWhite      1.48857585 0.20388924  1.08881190  1.89371770 53.1794746 3.044232e-13      2
+log_pTau181_recode:SCHLYRS -0.01807460 0.03344696 -0.08707037  0.04611145  0.2888671 5.909474e-01      2
+
+Method: 1-Wald, 2-Profile penalized log-likelihood, 3-None
+
+Likelihood ratio test=322.7642 on 6 df, p=0, n=3692
+Wald test = 972.9804 on 6 df, p = 0
