@@ -1,0 +1,4 @@
+"Metric","Estimate","CI_lower","CI_upper","P_value"
+"NRI_categorical",0.0102,-0.1585,0.1788,0.90587
+"NRI_continuous",-0.2019,-0.3584,-0.0454,0.01144
+"IDI",-0.0087,-0.019,0.0016,0.09758
