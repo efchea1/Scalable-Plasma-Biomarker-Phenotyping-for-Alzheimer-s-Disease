@@ -1,0 +1,5 @@
+"Comparison","ARI","NMI","Interpretation"
+"ATN vs K-Means",0.119013089890641,0.113014423150798,"Low agreement"
+"ATN vs ATN_quartile",0.315535430972978,0.468352499075254,"Moderate agreement"
+"K-Means (4D) vs PCA (2D)",0.682246563665663,NA,"Compares projection methods"
+"K-Means (4D) vs VAE (2D)",0.0815324201196879,NA,"Compares projection methods"

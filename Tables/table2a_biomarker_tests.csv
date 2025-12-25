@@ -1,0 +1,5 @@
+"Biomarker","Test","P_raw","P_adjusted","Significant"
+"NfL","Kruskal-Wallis","< 0.001","< 0.001","Yes"
+"GFAP","Kruskal-Wallis","< 0.001","< 0.001","Yes"
+"Aβ42/40","Kruskal-Wallis","< 0.001","< 0.001","Yes"
+"pTau181","Kruskal-Wallis","< 0.001","< 0.001","Yes"
