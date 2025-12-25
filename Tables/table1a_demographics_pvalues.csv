@@ -1,5 +1,0 @@
-"Variable","Test","P_raw","P_adjusted","Significant"
-"Age","Kruskal-Wallis","< 0.001","< 0.001","Yes"
-"Gender","Chi-square","< 0.001","< 0.001","Yes"
-"Race/Ethnicity","Chi-square","< 0.001","< 0.001","Yes"
-"Education","Kruskal-Wallis","< 0.001","< 0.001","Yes"
