@@ -1,0 +1,26 @@
+
+Call:
+lm(formula = Cog_Decline_2018_2020 ~ Cluster + PAGE + GENDER + 
+    RACE + SCHLYRS, data = long_2018_2020_clust)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-16.1885  -2.3617  -0.0142   2.5028  18.0116 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -0.812133   1.006517  -0.807 0.419796    
+Cluster2     0.215205   0.769745   0.280 0.779817    
+Cluster3    -0.260654   0.753160  -0.346 0.729304    
+Cluster4    -0.506630   1.391668  -0.364 0.715847    
+PAGE         0.028427   0.008170   3.479 0.000509 ***
+GENDER      -0.254891   0.138717  -1.837 0.066226 .  
+RACE        -0.039982   0.040604  -0.985 0.324855    
+SCHLYRS     -0.002016   0.009600  -0.210 0.833679    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.888 on 3340 degrees of freedom
+Multiple R-squared:  0.01133,	Adjusted R-squared:  0.009262 
+F-statistic:  5.47 on 7 and 3340 DF,  p-value: 2.899e-06
+
