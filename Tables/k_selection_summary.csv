@@ -1,0 +1,5 @@
+"Analysis","K_value","Method"
+"NbClust recommendation",2,"Multiple indices"
+"Elbow method",4,"WSS"
+"Maximum silhouette",3,"Silhouette"
+"Final selection",4,"Combined criteria"
